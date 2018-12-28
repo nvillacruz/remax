@@ -1,0 +1,432 @@
+﻿<!DOCTYPE html>
+<html lang="en-GB">
+
+<head>
+	<meta charset="utf-8">
+	<title></title>
+	<link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet">
+</head>
+<style>
+	body {
+		margin: 0;
+		padding: 0;
+		font-family: "Roboto", sans-serif;
+	}
+
+	img {
+		border: 0 none;
+		height: auto;
+		line-height: 100%;
+		outline: none;
+		text-decoration: none
+	}
+
+	a img {
+		border: 0 none
+	}
+
+	table,
+	td {
+		border-collapse: collapse;
+		padding: 0
+	}
+
+	h1,
+	h2,
+	h3,
+	h4,
+	h5,
+	h6 {
+		margin: 0
+	}
+
+	.container {
+		font-family: "Roboto", sans-serif;
+		margin: 0;
+		padding: 0;
+		background-color: #eef5f9;
+		width: 100% !important;
+		height: 100% !important;
+		font-size: 16px;
+		line-height: 1.4;
+		-ms-text-size-adjust: 100%;
+		-webkit-text-size-adjust: 100%;
+	}
+
+	.wrapper {
+		padding: 32px;
+		border-collapse: collapse;
+		display: block;
+	}
+
+		.wrapper .wrapped-content {
+			border-collapse: collapse;
+			padding: 0;
+		}
+
+	.content-item {
+		padding: 16px;
+		border-collapse: collapse;
+	}
+
+		.content-item h1 {
+			margin: 0px;
+			font-size: 32px;
+		}
+
+	.text-center {
+		text-align: center;
+	}
+
+	.inline-block {
+		display: inline-block;
+	}
+
+	.page-behind-1,
+	.page-behind-2 {
+		font-size: 0;
+		line-height: 0;
+	}
+
+		.page-behind-1 table > tbody > tr > td,
+		.page-behind-2 table > tbody > tr > td {
+			font-size: 0;
+			line-height: 0;
+			padding: 0;
+			width: 100%;
+			margin-bottom: 4px;
+			display: inline-block;
+			border-top: 4px solid #fff
+		}
+
+		.page-behind-1 table {
+			width: 75%
+		}
+
+		.page-behind-2 table {
+			width: 90%
+		}
+
+	.page-content {
+		padding: 32px;
+		border-collapse: collapse;
+		background-color: #fff;
+		background-image: none;
+		background-repeat: repeat;
+		background-position: top left;
+		background-attachment: scroll;
+	}
+
+	.button td {
+		border-radius: 16px;
+		background-color: #fbbd1f
+	}
+
+		.button td a {
+			border-radius: 16px;
+			border: solid 1px #27200d;
+			color: #833b20;
+			padding: 16px 32px;
+			text-decoration: none;
+			display: inline-block
+		}
+
+	.text-logo {
+		padding-top: 96px;
+		padding-bottom: 32px
+	}
+
+	.logo {
+		/* max-width: 150px;
+		max-height: 70px; */
+	}
+
+	.footer {
+		display: flex;
+		flex-direction: column;
+		background: #333333;
+		color: #ffffff;
+		align-items: center;
+		justify-content: center;
+		font-size: 12.30769231px;
+
+		margin-top: 40px;
+	}
+
+		.footer .company {
+			position: relative;
+			width: 100%;
+		}
+
+			.footer .company .line1 {
+				display: flex;
+				flex-wrap: wrap;
+			}
+
+				.footer .company .line1 .push-right {
+					margin-left: auto;
+				}
+
+	@media (max-width: 425px) {
+		.footer .company .line1 .push-right {
+			display: none;
+		}
+	}
+
+	.footer .company .line1 .legal,
+	.footer .company .line1 .contact,
+	.footer .company .line1 .location,
+	.footer .company .line1 .follow {
+		padding: 16px;
+		display: flex;
+		flex-direction: column;
+		justify-content: flex-start;
+	}
+
+		footer .company .line1 .legal .item,
+		footer .company .line1 .contact .item,
+		footer .company .line1 .location .item,
+		footer .company .line1 .follow .item {
+			display: flex;
+			align-items: center;
+		}
+
+			.footer .company .line1 .legal .item mat-icon,
+			.footer .company .line1 .contact .item mat-icon,
+			.footer .company .line1 .location .item mat-icon,
+			.footer .company .line1 .follow .item mat-icon {
+				font-size: 16px;
+				height: 16px;
+				width: 16px;
+				margin-right: 8px;
+			}
+
+	.footer .company .line1 .socials {
+		align-items: center;
+		font-size: 20.8px;
+	}
+
+		.footer .company .line1 .socials a {
+			margin: 0 8px;
+		}
+
+	.footer .line2 {
+		font-size: 12.30769231px;
+		margin: 16px 0;
+	}
+
+		.footer .line2 .item {
+			opacity: 0.8;
+		}
+
+	.tr1-footer {
+		padding: 16px;
+		display: flex;
+		flex-direction: row;
+		justify-content: flex-start;
+		font-size: 12.3px;
+	}
+
+	ul {
+		list-style-type: none;
+	}
+
+	a.link {
+		color: inherit !important;
+		text-decoration: none;
+		cursor: pointer;
+	}
+
+		a.link:hover,
+		a.link:focus {
+			color: #2196f3;
+		}
+
+		a.link:visited {
+			color: #02bec9;
+		}
+
+		a.link:active {
+			color: #2196f3;
+			text-decoration: underline;
+		}
+
+	a.link {
+		color: inherit !important;
+		text-decoration: none;
+		cursor: pointer;
+	}
+
+		a.link:hover,
+		a.link:focus {
+			color: #2196f3;
+		}
+
+		a.link:visited {
+			color: #02bec9;
+		}
+
+		a.link:active {
+			color: #2196f3;
+			text-decoration: underline;
+		}
+</style>
+
+<body>
+	<!-- Fills entire email viewport -->
+	<table class="container">
+		<tbody>
+			<tr>
+				<!-- Centers and limits width to recommended size -->
+				<td class="wrapper" align="center">
+					<!-- Start of wrapped content  -->
+					<table class="wrapped-content">
+						<tbody>
+							<!-- Page content -->
+							<tr>
+								<td align="center" class="page-content">
+
+									<!-- Table containing page content -->
+									<table class="text-center" style="border-collapse:collapse;padding-top:0;padding-bottom:0;padding-right:0;padding-left:0;text-align:left;">
+										<tbody>
+											<tr>
+												<td>
+													<center><img class="logo" src="http://vccoffees.com/api/download/events?filename=logo\ybizzlogo.png"></center>
+												</td>
+											</tr>
+
+											<!-- Header -->
+											<tr>
+												<td class="content-item">
+													<h1>--Title--</h1>
+												</td>
+											</tr>
+
+											<!-- Text -->
+											<tr>
+												<td class="content-item">
+													--Content1--
+												</td>
+											</tr>
+
+											<!-- Text -->
+											<tr>
+												<td class="content-item">
+													--Content2--
+												</td>
+											</tr>
+
+									
+											<tr>
+												<td class="content-item">
+													--Content3--
+												</td>
+											</tr>
+
+											<!-- Button -->
+											<tr>
+												<td class="content-item" align="center">
+													<table class="button" style="border-collapse:collapse;padding-top:0;padding-bottom:0;padding-right:0;padding-left:0;">
+														<tbody>
+															<tr>
+																<td style="border-collapse:collapse;padding-top:0;padding-bottom:0;padding-right:0;padding-left:0;border-radius:16px;background-color: gold;">
+
+																	<a href="--ButtonUrl--" target="_blank" style="border-radius:16px;border-width:1px;border-style:solid;border-color:goldenrod;color:#923b1c;padding-top:16px;padding-bottom:16px;padding-right:32px;padding-left:32px;text-decoration:none;display:inline-block;">--ButtonText--</a>
+																</td>
+															</tr>
+														</tbody>
+													</table>
+												</td>
+											</tr>
+										</tbody>
+									</table>
+								</td>
+							</tr>
+						</tbody>
+					</table>
+				</td>
+			</tr>
+
+		</tbody>
+	</table>
+	<br />
+	<br />
+	<br />
+	<div class="footer">
+		<table>
+			<tbody>
+				<!-- Footer -->
+				<tr class="tr1-footer">
+					<!-- COMPANY column -->
+					<td style="padding-right: 16px; line-height: 1.4;">
+						<b>COMPANY</b><br>
+						<a class="link" href="http://bookings.y-bizz.com/layout/about-us">About Us</a>
+					</td>
+
+					<!-- LEGAL column -->
+					<td style="padding-left: 16px; padding-right: 16px; line-height: 1.4;">
+						<b>LEGAL</b><br>
+						<a class="link" href="http://bookings.y-bizz.com/layout/terms-and-conditions">
+							Terms
+							and Conditions
+						</a><br>
+						<a class="link" href="http://bookings.y-bizz.com/layout/privacy-policy">
+							Privacy
+							Policy
+						</a><br>
+						<a class="link" href="http://bookings.y-bizz.com/layout/cancellation-policy">
+							Standard
+							Cancellation Policy
+						</a>
+					</td>
+
+					<!-- CONTACT column -->
+					<td style="padding-left: 16px; padding-right: 16px; line-height: 1.4;">
+						<b>CONTACT</b><br>
+						(+632) 850-4775<br>
+						+63 917 502 8719<br>
+						<a class="link">info@y-bizz.com</a>
+					</td>
+
+					<!-- LOCATION column -->
+					<td style="padding-left: 16px; padding-right: 16px; line-height: 1.4;">
+						<b>LOCATION</b><br>
+						27th floor PBCom Tower, 6795 Ayala Ave., Makati, Metro Manila<br>
+						<a href="https://www.google.com/maps/place/PBCom+Tower/@14.5581798,121.0192433,20z/data=!4m8!1m2!2m1!1s27th+floor+PBCom+Tower,+6795+Ayala+Ave.,+Makati,+Metro+Manila!3m4!1s0x3397c90f2bc8f2e5:0x26f23c9dc7773133!8m2!3d14.558231!4d121.019393"
+							 class="link">Site Map</a>
+					</td>
+
+					<!-- CONNECT WITH US column -->
+					<td style="padding-left: 16px; line-height: 1.4;">
+						<b>CONNECT WITH US</b><br>
+						<a href="https://www.facebook.com/ybizzincubator">
+							<div style="height: 24px; width: 24px; display: inline-block; background-repeat: no-repeat">
+								<svg version="1.1" xmlns="http://www.w3.org/2000/svg" width="100%" height="100%"
+										 viewBox="0 0 32 32" fit="" preserveAspectRatio="xMidYMid meet" focusable="false">
+									<title>Facebook</title>
+									<path fill="#3b5998" d="M30.235 0h-28.469c-0.975 0-1.765 0.791-1.765 1.765v28.469c0 0.976 0.791 1.765 1.765 1.765h15.325v-12.392h-4.172v-4.828h4.172v-3.567c0-4.132 2.525-6.38 6.212-6.38 1.767 0 3.285 0.129 3.728 0.188v4.32h-2.561c-2 0-2.389 0.961-2.389 2.361v3.081h4.779l-0.62 4.84h-4.159v12.376h8.153c0.977 0 1.767-0.789 1.767-1.765v-28.469c0-0.975-0.789-1.765-1.765-1.765z"></path>
+								</svg>
+							</div>
+						</a>
+						<a href="https://twitter.com/ybizzincubator">
+							<div style="height: 24px; width: 24px; display: inline-block; background-repeat: no-repeat">
+								<svg version="1.1" xmlns="http://www.w3.org/2000/svg" width="100%" height="100%"
+										 viewBox="0 0 32 32" fit="" preserveAspectRatio="xMidYMid meet" focusable="false">
+									<title>Twitter</title>
+									<path fill="#1da1f2" d="M31.939 6.092c-1.18 0.519-2.44 0.872-3.767 1.033 1.352-0.815 2.392-2.099 2.884-3.631-1.268 0.74-2.673 1.279-4.169 1.579-1.195-1.279-2.897-2.079-4.788-2.079-3.623 0-6.56 2.937-6.56 6.556 0 0.52 0.060 1.020 0.169 1.499-5.453-0.257-10.287-2.876-13.521-6.835-0.569 0.963-0.888 2.081-0.888 3.3 0 2.28 1.16 4.284 2.917 5.461-1.076-0.035-2.088-0.331-2.971-0.821v0.081c0 3.18 2.257 5.832 5.261 6.436-0.551 0.148-1.132 0.228-1.728 0.228-0.419 0-0.82-0.040-1.221-0.115 0.841 2.604 3.26 4.503 6.139 4.556-2.24 1.759-5.079 2.807-8.136 2.807-0.52 0-1.039-0.031-1.56-0.089 2.919 1.859 6.357 2.945 10.076 2.945 12.072 0 18.665-9.995 18.665-18.648 0-0.279 0-0.56-0.020-0.84 1.281-0.919 2.4-2.080 3.28-3.397l-0.063-0.027z"></path>
+								</svg>
+							</div>
+						</a>
+					</td>
+				</tr>
+				<tr class="tr1-footer">
+					<td>
+						&#169; Y-Bizz Reservation System 2018
+					</td>
+				</tr>
+			</tbody>
+		</table>
+	</div>
+</body>
+
+</html>

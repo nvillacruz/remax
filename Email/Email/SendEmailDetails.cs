@@ -1,4 +1,4 @@
-﻿namespace Y.Bizz.Web.Server
+﻿namespace Remax.Web.Server
 {
     /// <summary>
     /// The details about the email to send

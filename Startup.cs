@@ -1,8 +1,11 @@
-﻿using Microsoft.AspNetCore.Builder;
+﻿using Dna;
+using Dna.AspNet;
+using FluentValidation.AspNetCore;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Rewrite;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -10,11 +13,10 @@ using Microsoft.IdentityModel.Tokens;
 using Newtonsoft.Json.Serialization;
 using Swashbuckle.AspNetCore.Swagger;
 using System;
+using System.IO;
 using System.Text;
-using Dna;
-using Dna.AspNet;
 
-namespace Y.Bizz.Web.Server
+namespace Remax.Web.Server
 {
     /// <summary>
     /// The startup class that handles constructing the ASP.Net server services
@@ -28,12 +30,23 @@ namespace Y.Bizz.Web.Server
         public Startup(IConfiguration configuration)
         {
 
-
         }
 
-        // This method gets called by the runtime. Use this method to add services to the container.
+        /// <summary>
+        /// This method gets called by the runtime. Use this method to add services to the container.
+        /// </summary>
+        /// <param name="services"></param>
         public void ConfigureServices(IServiceCollection services)
         {
+            //Add proper cookie request to foloow GDPR
+            services.Configure<CookiePolicyOptions>(options =>
+            {
+                //This lambda determins whether user consent for 
+                //non -essential cookies is needed for a given request
+                options.CheckConsentNeeded = context => true;
+                options.MinimumSameSitePolicy = SameSiteMode.None;
+            });
+
             // Add SendGrid email sender
             services.AddSendGridEmailSender();
 
@@ -73,18 +86,17 @@ namespace Y.Bizz.Web.Server
                         ValidateLifetime = true,
                         // Validate signature
                         ValidateIssuerSigningKey = true,
-
                         // Set issuer
                         ValidIssuer = Framework.Construction.Configuration["Jwt:Issuer"],
                         // Set audience
                         ValidAudience = Framework.Construction.Configuration["Jwt:Audience"],
-
                         // Set signing key
                         IssuerSigningKey = new SymmetricSecurityKey(
                             // Get our secret key from configuration
                             Encoding.UTF8.GetBytes(Framework.Construction.Configuration["Jwt:SecretKey"])),
                     };
                 });
+
             services.AddAuthentication().AddGoogle(options =>
             {
                 options.ClientId = Framework.Construction.Configuration["GoogleAuth:ClientId"];
@@ -94,15 +106,21 @@ namespace Y.Bizz.Web.Server
             // Change password policy
             services.Configure<IdentityOptions>(options =>
             {
-                // Make really weak passwords possible
-                options.Password.RequireDigit = false;
-                options.Password.RequiredLength = 5;
+                //Password Settings
+                options.Password.RequireDigit = true;
+                options.Password.RequiredLength = 8;
                 options.Password.RequireLowercase = true;
                 options.Password.RequireUppercase = false;
                 options.Password.RequireNonAlphanumeric = false;
 
-                // Make sure users have unique emails
+                //User Settings
                 options.User.RequireUniqueEmail = true;
+
+               // Lockout settings.
+                options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(5);
+                options.Lockout.MaxFailedAccessAttempts = 5;
+                options.Lockout.AllowedForNewUsers = true;
+
             });
 
             // Alter application cookie info
@@ -133,7 +151,15 @@ namespace Y.Bizz.Web.Server
             {
                 //options.InputFormatters.Add(new XmlSerializerInputFormatter());
                 //options.OutputFormatters.Add(new DefaultContractResolver());
-            });
+            })
+
+            //Add Fluent validation
+            .AddFluentValidation(x=> x.RegisterValidatorsFromAssemblyContaining<Startup>())
+
+           // State we are a minimum compatibility of 2.1 onwards
+           .SetCompatibilityVersion(CompatibilityVersion.Version_2_1); 
+
+
 
             services.AddMvc().AddJsonOptions(opt =>
             {
@@ -144,22 +170,54 @@ namespace Y.Bizz.Web.Server
                 }
             });
 
+            
 
-            //Enforcing SSL globally
-            services.Configure<MvcOptions>(options =>
-            {
-                //options.SslPort = 3000;
-                options.Filters.Add(new RequireHttpsAttribute());
-            });
+            //services.AddSignalR();
+
+            ////Multipart
+            //services.Configure<FormOptions>(x =>
+            //{
+            //    x.MultipartBodyLengthLimit = 60000000;
+            //    x.MemoryBufferThreshold = Int32.MaxValue;
+            //});
+
+         
+            ////Enforcing SSL globally
+            //services.Configure<MvcOptions>(options =>
+            //{
+            //    //options.SslPort = 3000;
+            //    options.Filters.Add(new RequireHttpsAttribute());
+            //});
 
             // Register the Swagger generator, defining one or more Swagger documents  
             services.AddSwaggerGen(c =>
             {
-                c.SwaggerDoc("v1", new Info { Title = "My API", Version = "v1" });
+                c.SwaggerDoc("v1", new Info
+                {
+                    Title = "Y Bizz Reservation System API",
+                    Version = "v1",
+                    Description = "Y Bizz Reservation System API",
+                    TermsOfService = "None",
+                    Contact = new Contact { Name = "Nelson Villacruz", Email = "nelson.villacruz@ygroup.ph", Url = "vccoffees.com" }
+                });
+
+                c.IncludeXmlComments(Path.Combine(AppContext.BaseDirectory, "Remax.Web.Server.xml"));
             });
 
-        }
 
+            //services.Configure<FormOptions>(x =>
+            //{
+            //    x.ValueLengthLimit = int.MaxValue;
+            //    x.MultipartBodyLengthLimit = int.MaxValue; // In case of multipart
+            //});
+
+        }
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="app"></param>
+        /// <param name="env"></param>
+        /// <param name="serviceProvider"></param>
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IHostingEnvironment env, IServiceProvider serviceProvider)
         {
@@ -170,9 +228,9 @@ namespace Y.Bizz.Web.Server
             app.UseAuthentication();
 
             //Redirect HTTP calls to HTTPS
-            var options = new RewriteOptions()
-            .AddRedirectToHttps();
-            app.UseRewriter(options);
+            //var options = new RewriteOptions()
+            //.AddRedirectToHttps();
+            //app.UseRewriter(options);
 
 
             // If in development...
@@ -187,15 +245,31 @@ namespace Y.Bizz.Web.Server
             else
             // Just show generic error page
             {
+
                 app.UseExceptionHandler("/Home/Error");
-                //app.UseHsts();
+
+                // In production, tell the browsers (via the HSTS header)
+                // to only try and access our site via HTTPS, not HTTP
+                app.UseHsts();
             }
+
+            // Redirect all calls from HTTP to HTTPS
+            //app.UseHttpsRedirection();
+
+            // Force non-essential cookies to only store
+            // if the user has consented
+            app.UseCookiePolicy();
 
             // Serve static files
             app.UseStaticFiles();
 
             //Use CORS set up above
             app.UseCors("AllowAllOrigins");
+
+            //app.UseSignalR(routes =>
+            //{
+            //    routes.MapHub<MessageHub>("/message");
+            //});
 
             // Enable middleware to serve generated Swagger as a JSON endpoint.
             app.UseSwagger();
@@ -216,6 +290,8 @@ namespace Y.Bizz.Web.Server
                     "{controller=Home}/{action=Index}/{moreInfo?}");
 
             });
+
+            
         }
     }
 }

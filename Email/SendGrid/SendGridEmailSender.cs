@@ -9,13 +9,18 @@ using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Y.Bizz.Web.Server
+namespace Remax.Web.Server
 {
     /// <summary>
     /// Sends emails using the SendGrid service
     /// </summary>
     public class SendGridEmailSender : IEmailSender
     {
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="details"></param>
+        /// <returns></returns>
         public async Task<SendEmailResponse> SendEmailAsync(SendEmailDetails details)
         {
             // Get the SendGrid key

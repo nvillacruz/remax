@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace Y.Bizz.Web.Server
+namespace Remax.Web.Server
 {
     /// <summary>
     /// A response from a SendEmail call for any <see cref="IEmailSender"/> implementation

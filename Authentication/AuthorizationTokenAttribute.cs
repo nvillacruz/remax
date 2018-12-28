@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 
-namespace Y.Bizz.Web.Server
+namespace Remax.Web.Server
 {
     /// <summary>
     /// The authorization policy for token-based authentication

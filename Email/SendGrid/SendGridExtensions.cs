@@ -1,6 +1,6 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 
-namespace Y.Bizz.Web.Server
+namespace Remax.Web.Server
 {
     /// <summary>
     /// Extension methods for any SendGrid classes

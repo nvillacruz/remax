@@ -1,6 +1,6 @@
 ﻿using System.Threading.Tasks;
 
-namespace Y.Bizz.Web.Server
+namespace Remax.Web.Server
 {
     /// <summary>
     /// A service that handles sending emails on behalf of the caller

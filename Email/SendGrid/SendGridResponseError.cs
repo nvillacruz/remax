@@ -1,4 +1,4 @@
-﻿namespace Y.Bizz.Web.Server
+﻿namespace Remax.Web.Server
 {
     /// <summary>
     /// An error response for a <see cref="SendGridResponse"/>

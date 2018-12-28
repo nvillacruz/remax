@@ -1,18 +1,18 @@
-﻿using Microsoft.AspNetCore.Authentication;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Identity;
+﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using System.Web;
 
-namespace Y.Bizz.Web.Server
+namespace Remax.Web.Server
 {
-    [ApiExplorerSettings(IgnoreApi = true)]
     /// <summary>
     /// Manages the standard web server pages
     /// </summary>
+    [ApiExplorerSettings(IgnoreApi = true)]
+
     public class HomeController : Controller
     {
         #region Protected Members
@@ -32,27 +32,43 @@ namespace Y.Bizz.Web.Server
         /// </summary>
         protected SignInManager<ApplicationUser> mSignInManager;
 
-        #endregion
+        /// <summary>
+        /// 
+        /// </summary>
+        protected RoleManager<IdentityRole> mRoleManager;
+        /// <summary>
+        /// 
+        /// </summary>
+        protected string superAdminId;
 
+        /// <summary>
+        /// 
+        /// </summary>
+        protected string mEmployeeId;
+        #endregion
 
         #region Constructor
 
         /// <summary>
-        /// Default constructor
+        /// 
         /// </summary>
-        /// <param name="context">The injected context</param>
-        /// <param name="signInManager">The Identity sign in manager</param>
-        /// <param name="userManager">The Identity user manager</param>
+        /// <param name="context"></param>
+        /// <param name="userManager"></param>
+        /// <param name="signInManager"></param>
+        /// <param name="roleManager"></param>
         public HomeController(
             ApplicationDbContext context,
             UserManager<ApplicationUser> userManager,
-            SignInManager<ApplicationUser> signInManager)
+            SignInManager<ApplicationUser> signInManager,
+            RoleManager<IdentityRole> roleManager
+            )
         {
             mContext = context;
             mUserManager = userManager;
             mSignInManager = signInManager;
+            mRoleManager = roleManager;
         }
-
+                
         #endregion
 
 
@@ -61,122 +77,60 @@ namespace Y.Bizz.Web.Server
         /// </summary>
         /// <returns></returns>
         ///
-        //[RequireHttps] //Enforcing SSL per controllers
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
             // Make sure we have the database
+
+            //mContext.Database.EnsureDeleted();
             mContext.Database.EnsureCreated();
 
-            // If we have no settings already...
-            if (!mContext.Settings.Any())
-            {
-                // Add a new setting
-                mContext.Settings.Add(new Setting
-                {
-                    Name = "BackgroundColor",
-                    Value = "Red"
-                });
-
-                // Check to show the new setting is currently only local and not in the database
-                var settingsLocally = mContext.Settings.Local.Count();
-                var settingsDatabase = mContext.Settings.Count();
-                var firstLocal = mContext.Settings.Local.FirstOrDefault();
-                var firstDatabase = mContext.Settings.FirstOrDefault();
-
-                // Commit setting to database
-                mContext.SaveChanges();
-
-                // Recheck to show its now in local and the actual database
-                settingsLocally = mContext.Settings.Local.Count();
-                settingsDatabase = mContext.Settings.Count();
-                firstLocal = mContext.Settings.Local.FirstOrDefault();
-                firstDatabase = mContext.Settings.FirstOrDefault();
-            }
-
+            await AddAspNetRolesAsync();
+            await AddSuperAdminUserAsync();
             return View();
         }
 
-        /// <summary>
-        /// Creates our single user for now
-        /// </summary>
-        /// <returns></returns>
-        [Route("create")]
-        [HttpPost]
-        public async Task<IActionResult> CreateUserAsync()
+        private async Task AddAspNetRolesAsync()
         {
-            var result = await mUserManager.CreateAsync(new ApplicationUser
+            var li = new List<IdentityRole> {
+                new IdentityRole{Name = AspNetRolesDefaults.SuperAdmin, NormalizedName = AspNetRolesDefaults.SuperAdmin.NormalizedUpper() },
+                new IdentityRole{Name = AspNetRolesDefaults.Admin, NormalizedName = AspNetRolesDefaults.Admin.NormalizedUpper() },
+                new IdentityRole{Name = AspNetRolesDefaults.Manager, NormalizedName = AspNetRolesDefaults.Manager.NormalizedUpper() },
+                new IdentityRole{Name = AspNetRolesDefaults.Employee, NormalizedName = AspNetRolesDefaults.Employee.NormalizedUpper() },
+            };
+
+            await mContext.Roles.AddRangeAsync(li);
+            await mContext.SaveChangesAsync();
+        }
+        private async Task AddSuperAdminUserAsync()
+        {
+            var employeeId = StringHelper.GenerateNewGuid();
+            mEmployeeId = employeeId;
+            var user = new ApplicationUser
             {
-                UserName = "angelsix",
-                Email = "contact@angelsix.com",
-                FirstName = "Luke",
-                LastName = "Malpass"
-            }, "password");
+                UserName = "admin",
+                Email = "nelson.villacruz@ygroup.ph",
+                Id = StringHelper.GenerateNewGuid(),
+                EmailConfirmed = true,
+                PhoneNumber = "09509595882",
+                Employee = new Employee
+                {
+                    Id = employeeId,
+                    FirstName = "Nelson",
+                    LastName = "Villacruz",
+                    Email = "nelson.villacruz@ygroup.ph",
+                    PhoneNumber = "09509595882",
+                    Affiliation = "Y Hotel",
+                    Gender = "male",
+                    BirthDate = DateTimeOffset.UtcNow,
+                },
 
-            if (result.Succeeded)
-                return Content("User was created", "text/html");
+            };
 
-            return Content("User creation failed", "text/html");
+            var success = await mUserManager.CreateAsync(user, "Password1234");
+            if (success.Succeeded)
+                await mUserManager.AddToRolesAsync(user, new[] { AspNetRolesDefaults.SuperAdmin, AspNetRolesDefaults.Employee });
         }
 
-        /// <summary>
-        /// Private area. No peeking
-        /// </summary>
-        /// <returns></returns>
-        [Authorize]
-        [Route("private")]
-        [HttpGet]
-        public IActionResult Private()
-        {
-            return Content($"This is a private area. Welcome {HttpContext.User.Identity.Name}", "text/html");
-        }
 
-        /// <summary>
-        /// Log the user out
-        /// </summary>
-        /// <returns></returns>
-        [Route("logout")]
-        [HttpPost]
-        public async Task<IActionResult> SignOutAsync()
-        {
-            await HttpContext.SignOutAsync(IdentityConstants.ApplicationScheme);
-            return Content("done");
-        }
-
-        /// <summary>
-        /// An auto-login page for testing
-        /// </summary>
-        /// <param name="returnUrl">The url to return to if successfully logged in</param>
-        /// <returns></returns>
-        [Route("login")]
-        [HttpPost]
-        public async Task<IActionResult> LoginAsync(string returnUrl)
-        {
-            // Sign out any previous sessions
-            await HttpContext.SignOutAsync(IdentityConstants.ApplicationScheme);
-
-            // Sign user in with the valid credentials
-            var result = await mSignInManager.PasswordSignInAsync("angelsix", "password", true, false);
-
-            // If successful...
-            if (result.Succeeded)
-            {
-                // If we have no return URL...
-                if (string.IsNullOrEmpty(returnUrl))
-                    // Go to home
-                    return RedirectToAction(nameof(Index));
-
-                // Otherwise, go to the return url
-                return Redirect(returnUrl);
-            }
-
-            return Content("Failed to login", "text/html");
-        }
-
-        [Route("test")]
-        [HttpPost]
-        public Setting Test([FromBody]Setting model)
-        {
-            return new Setting { Id = "some id", Name = "Luke", Value = "10" };
-        }
     }
 }

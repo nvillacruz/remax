@@ -6,16 +6,28 @@ using Microsoft.AspNetCore.Server.Kestrel.Core;
 using System;
 using System.Net;
 
-namespace Y.Bizz.Web.Server
+namespace Remax.Web.Server
 {
+    /// <summary>
+    /// 
+    /// </summary>
     public class Program
     {
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="args"></param>
         public static void Main(string[] args)
         {
-            BuildWebHost(args).Run();
+            CreateBuildWebHostBuilder(args).Build().Run();
         }
 
-        public static IWebHost BuildWebHost(string[] args)
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="args"></param>
+        /// <returns></returns>
+        public static IWebHostBuilder CreateBuildWebHostBuilder(string[] args)
         {
 
             //https://cmatskas.com/enforcing-https-only-traffic-with-asp-net-core-and-kestrel/
@@ -25,6 +37,7 @@ namespace Y.Bizz.Web.Server
                 {
                     construct.AddFileLogger();
                 })
+                .UseIISIntegration()
                 .UseKestrel(options =>
                 {
                     options.Limits.MaxConcurrentConnections = 100;
@@ -34,14 +47,14 @@ namespace Y.Bizz.Web.Server
                         new MinDataRate(bytesPerSecond: 100, gracePeriod: TimeSpan.FromSeconds(10));
                     options.Limits.MinResponseDataRate =
                         new MinDataRate(bytesPerSecond: 100, gracePeriod: TimeSpan.FromSeconds(10));
-                    options.Listen(IPAddress.Loopback, 4001);
-                    options.Listen(IPAddress.Loopback, 4000, listenOptions =>
+                    options.Listen(IPAddress.Loopback, 7001);
+                    options.Listen(IPAddress.Loopback, 7000, listenOptions =>
                     {
-                        listenOptions.UseHttps("development.pfx", "YHotel2018");
+                        //listenOptions.UseHttps("development.pfx", "YHotel2018");
                     });
                 })
-                .UseStartup<Startup>()
-                .Build();
+                .UseStartup<Startup>();
+                
         }
 
     }

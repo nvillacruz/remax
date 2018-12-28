@@ -1,7 +1,8 @@
-﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+﻿using Linq.PropertyTranslator.Core;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
-namespace Y.Bizz.Web.Server
+namespace Remax.Web.Server
 {
     /// <summary>
     /// The database representational model for our application
@@ -9,22 +10,11 @@ namespace Y.Bizz.Web.Server
     public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
     {
         #region Public Properties
-
-        /// <summary>
-        /// The settings for the application
-        /// </summary>
-        public DbSet<Setting> Settings { get; set; }
-
-
+     
         /// <summary>
         /// External properties for the Application User used for external login
         /// </summary>
-        public DbSet<Customer> Customers { get; set; }
-
-        /// <summary>
-        /// Bookings
-        /// </summary>
-        public DbSet<Booking> Bookings { get; set; }
+        public DbSet<Employee> Employees { get; set; }
 
         #endregion
 
@@ -41,15 +31,20 @@ namespace Y.Bizz.Web.Server
 
         #endregion
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="modelBuilder"></param>
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
 
-            // Fluent API
-            modelBuilder.ApplyConfiguration(new CustomerConfiguration());
-            modelBuilder.ApplyConfiguration(new BookingConfiguration());
-            modelBuilder.ApplyConfiguration(new SettingConfiguration());
-
+            //Import all configurations
+            modelBuilder.ApplyConfiguration(new ApplicationUserConfiguration());
+            modelBuilder.ApplyConfiguration(new EmployeeConfiguration());
+           
         }
+
+
     }
 }

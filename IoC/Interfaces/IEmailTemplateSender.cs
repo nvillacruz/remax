@@ -1,6 +1,6 @@
 ﻿using System.Threading.Tasks;
 
-namespace Y.Bizz.Web.Server
+namespace Remax.Web.Server
 {
     /// <summary>
     /// Sends emails using the <see cref="IEmailSender"/> and creating the HTML
@@ -19,5 +19,18 @@ namespace Y.Bizz.Web.Server
         /// <param name="buttonUrl">The button URL</param>
         /// <returns></returns>
         Task<SendEmailResponse> SendGeneralEmailAsync(SendEmailDetails details, string title, string content1, string content2, string buttonText, string buttonUrl);
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="details"></param>
+        /// <param name="title"></param>
+        /// <param name="content1"></param>
+        /// <param name="content2"></param>
+        /// <param name="content3"></param>
+        /// <param name="buttonText"></param>
+        /// <param name="buttonUrl"></param>
+        /// <returns></returns>
+        Task<SendEmailResponse> SendCoworkingMembershipConfirmationAsync(SendEmailDetails details, string title, string content1, string content2, string content3, string buttonText, string buttonUrl);
     }
 }
